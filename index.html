@@ -6,16 +6,21 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/style.css">
+  <script defer type="module" src="js/script.js"></script>
   <title>Eldritch</title>
 </head>
 
 <body>
   <div class="container">
     <div class="ancients-container">
-      <div class="ancient-card azathoth"></div>
-      <div class="ancient-card cthulthu"></div>
-      <div class="ancient-card iog-sothoth"></div>
-      <div class="ancient-card shub-niggurath"></div>
+      <div class="row">
+        <div class="ancient-card azathoth"></div>
+        <div class="ancient-card cthulthu"></div>
+      </div>
+      <div class="row">
+        <div class="ancient-card iog-sothoth"></div>
+        <div class="ancient-card shub-niggurath"></div>
+      </div>
     </div>
     <div class="difficulty-container">
       <div class="difficulty">Низкая</div>
@@ -23,7 +28,7 @@
       <div class="difficulty">Высокая</div>
     </div>
     <div class="deck-container">
-      <span class="shuffle-button">Замешать колоду</span>
+      <div class="shuffle-button">Замешать колоду</div>
       <div class="current-state">
         <div class="stage-container"><span class="stage-text done">Первая стадия</span>
           <div class="dots-container">
@@ -51,7 +56,6 @@
       <div class="last-card"></div>
     </div>
   </div>
-  <script type="module" src="js/script.js"></script>
 </body>
 
 </html>

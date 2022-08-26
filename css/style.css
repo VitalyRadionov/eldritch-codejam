@@ -19,11 +19,18 @@ body {
 
 .ancients-container {
   display: flex;
+  /* flex-direction: row; */
   flex-direction: column;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   gap: 10px;
   min-width: 40%;
   padding: 20px
+}
+
+.ancients-container .row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }
 
 .ancients-container .ancient-card {
@@ -59,9 +66,11 @@ body {
 .difficulty-container {
   display: none;
   flex-direction: column;
+  justify-content: center;
   gap: 20px;
-  height: 100vh;
-  justify-content: center
+  /* height: 100vh; */
+  padding: 20px;
+  /* visibility: hidden; */
 }
 
 .difficulty-container .difficulty {
@@ -78,7 +87,7 @@ body {
 }
 
 .deck-container {
-  display: none;
+  display: flex;
   align-items: center;
   flex-direction: column;
   gap: 20px;
@@ -87,18 +96,21 @@ body {
 }
 
 .deck-container .shuffle-button {
+  display: none;
   background-color: red;
   border: 2px solid purple;
   color: purple;
   cursor: pointer;
-  padding: 5px
+  padding: 5px;
+  /* visibility: hidden; */
 }
 
 .deck-container .current-state {
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: 10px;
-  min-height: 30%
+  min-height: 30%;
+  /* visibility: hidden; */
 }
 
 .deck-container .current-state .stage-container {
@@ -150,7 +162,8 @@ body {
 
 .deck-container .deck,
 .deck-container .last-card {
+  display: none;
   background-size: cover;
   height: 190px;
-  width: 130px
+  width: 130px;
 }
