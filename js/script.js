@@ -17,7 +17,6 @@ const lastCard = document.querySelector('.last-card');
 let ancientCard = [];
 let cardDeckOptions = [];
 let cardDeck = [];
-let counterNormalCards = [];
 
 container.addEventListener('click', defineTarget);
 
@@ -81,8 +80,8 @@ function getDifficulty(level) {
 
 function shuffleCardDeck() {
   return cardDeck = {
-    green: greenCards.filter(element => element.difficulty != cardDeckOptions.difficulty.removeCards),
-    blue: blueCards.filter(element => element.difficulty != cardDeckOptions.difficulty.removeCards),
+    green: filterCards(greenCards),
+    blue: filterCards(blueCards),
     brown: filterCards(brownCards),
   };
 }
@@ -94,59 +93,48 @@ function filterCards(colorCards) {
 
   ['easy', 'normal', 'hard']
     .filter(level => cardDeckOptions.difficulty.removeCards != level)
-    .forEach(level => difficultiesObj[level] = [...colorCards.filter(element => element.difficulty == level)]);
-  // console.log('difficultiesObj', difficultiesObj);
+    .forEach(level => difficultiesObj[level] = [...colorCards.filter(element => element.difficulty && level.includes(element.difficulty))]);
+  console.log('difficultiesObj', difficultiesObj);
 
   switch (cardDeckOptions.difficulty.id) {
     case 'veryEasy':
-      console.log('veryEasy');
-      break;
+      return shuffle(difficultiesObj, colorCards[0].color, 'easy');
     case 'easy':
       difficultiesObj = { easy: difficultiesObj.easy.concat(...difficultiesObj.normal) };
-      console.log('difficultiesObj', difficultiesObj);
-      shuffle(difficultiesObj, colorCards[0].color);
-      break;
+      return shuffle(difficultiesObj, colorCards[0].color, 'easy');
     case 'normal':
       difficultiesObj = { normal: difficultiesObj.easy.concat(...difficultiesObj.normal, ...difficultiesObj.hard) };
-      shuffle(difficultiesObj, colorCards[0].color);
-      break;
+      return shuffle(difficultiesObj, colorCards[0].color, 'normal');
     case 'hard':
       difficultiesObj = { hard: difficultiesObj.hard.concat(...difficultiesObj.normal) };
-      shuffle(difficultiesObj, colorCards[0].color);
-      console.log('difficultiesObj', difficultiesObj);
-      break;
+      return shuffle(difficultiesObj, colorCards[0].color, 'hard');
     case 'veryHard':
-      console.log('veryHard');
+      return shuffle(difficultiesObj, colorCards[0].color, 'hard');
     default:
       break;
   }
-
-  // shuffle(difficultiesObj, colorCards[0].color)
 }
 
-function shuffle(difficultiesObj, color) {
+function shuffle(difficultiesObj, color, level) {
   let normalCards = 0;
-  difficultiesObj.cardSet = [];
+  let cardSet = [];
 
-  normalCards = cardDeckOptions[color] - difficultiesObj[cardDeckOptions.difficulty.id].length;
+  normalCards = cardDeckOptions[color] - difficultiesObj[level].length;
   console.log(normalCards);
-
-  for (const key in difficultiesObj) {
-    if (key == cardDeckOptions.difficulty.id) {
-      if (normalCards >= 0) {
-        for (let index = difficultiesObj[key].length - 1; index >= 0; index--) {
-          difficultiesObj.cardSet.push(...difficultiesObj[key].splice(getRandomNum(index, 0), 1));
-        }
-        for (let index = difficultiesObj[key].length - 1; index >= 0; index--) {
-          difficultiesObj.cardSet.push(...difficultiesObj[key].splice(getRandomNum(index, 0), 1));
-        }
-      }
-      if (normalCards < 0) {
-        for (let index = cardDeckOptions[color] - 1; index >= 0; index--) {
-          console.log(cardDeckOptions[color] - 1);
-          difficultiesObj.cardSet.push(...difficultiesObj[key].splice(getRandomNum(difficultiesObj[key].length - 1, 0), 1));
-        }
-      }
+  if (normalCards >= 0) {
+    for (let index = normalCards; index > 0; index--) {
+      cardSet.push(...difficultiesObj.normal.splice(getRandomNum(difficultiesObj.normal.length - 1, 0), 1));
+    }
+    difficultiesObj = { [level]: cardSet.concat(...difficultiesObj[level]) };
+    cardSet = [];
+    for (let index = difficultiesObj[level].length - 1; index >= 0; index--) {
+      cardSet.push(...difficultiesObj[level].splice(getRandomNum(index, 0), 1));
+    }
+  } else {
+    for (let index = cardDeckOptions[color] - 1; index >= 0; index--) {
+      cardSet.push(...difficultiesObj[level].splice(getRandomNum(difficultiesObj[level].length - 1, 0), 1));
     }
   }
+  return difficultiesObj = cardSet;
+  // console.log('difficultiesObj', difficultiesObj);
 }

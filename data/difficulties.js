@@ -3,7 +3,8 @@ const difficulties = [
     id: 'veryEasy',
     name: 'Очень низкая',
     removeCards: 'hard',
-  }, {
+  },
+  {
     id: 'easy',
     name: 'Низкая',
     removeCards: 'hard',
