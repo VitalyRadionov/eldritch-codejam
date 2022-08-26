@@ -18,6 +18,11 @@ const difficulties = [
     name: 'Высокая',
     removeCards: 'easy',
   },
+  {
+    id: 'veryHard',
+    name: 'Очень высокая',
+    removeCards: 'easy',
+  },
 ]
 
 export default difficulties
