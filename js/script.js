@@ -30,7 +30,6 @@ function defineTarget(e) {
     e.target.classList.add('active');
     ancientCard = ancientsData.find((element) => { return e.target.classList.contains(element.id) });
     cardDeckOptions = getCards();
-    // console.log('cardDeckOptions', cardDeckOptions);
 
     toggleClassActive(difficultyContainer) != null ? toggleClassActive(difficultyContainer).classList.remove('active') : [];
     shuffleButton.style = '';
@@ -51,7 +50,6 @@ function defineTarget(e) {
     stages = [];
     currStage = 0;
     lapCounter = [0, 0, 0];
-    console.log('cardDeckOptions', cardDeckOptions);
   }
 
   if (e.target.classList.contains('shuffle-button')) {
@@ -111,7 +109,7 @@ function filterCards(colorCards) {
   ['easy', 'normal', 'hard']
     .filter(level => cardDeckOptions.difficulty.removeCards != level)
     .forEach(level => difficultiesObj[level] = [...colorCards.filter(element => element.difficulty && level.includes(element.difficulty))]);
-  // console.log('difficultiesObj', difficultiesObj);
+
 
   switch (cardDeckOptions.difficulty.id) {
     case 'veryEasy':
@@ -137,7 +135,7 @@ function shuffle(difficultiesObj, color, level) {
   let cardSet = [];
 
   normalCards = cardDeckOptions[color] - difficultiesObj[level].length;
-  // console.log(normalCards);
+
   if (normalCards >= 0) {
     for (let index = normalCards; index > 0; index--) {
       cardSet.push(...difficultiesObj.normal.splice(getRandomNum(difficultiesObj.normal.length - 1, 0), 1));
@@ -153,7 +151,6 @@ function shuffle(difficultiesObj, color, level) {
     }
   }
   return difficultiesObj = cardSet;
-  // console.log('difficultiesObj', difficultiesObj);
 }
 
 function showStageTracker() {
@@ -168,9 +165,6 @@ function showStageTracker() {
       a++;
     }
   }
-
-  console.log('lapCounter', lapCounter);
-  console.log(stages);
 
   currentState.querySelectorAll('.stage-text').forEach(element => {
     element.classList.remove('done');
@@ -215,6 +209,7 @@ function changeTracker() {
       stageContainer[currStage].querySelector('.stage-text').classList.add('done');
       currStage++;
     }
+    console.log(...remCard);
   }
 }
 
