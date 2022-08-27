@@ -35,6 +35,7 @@ function defineTarget(e) {
     shuffleButton.style = '';
     showDifficulty();
     currentState.style.display = deck.style.display = lastCard.style.display = 'none';
+    lastCard.style.backgroundImage = ``;
     stages = [];
     currStage = 0;
     lapCounter = [0, 0, 0];
@@ -56,6 +57,7 @@ function defineTarget(e) {
     shuffleButton.style = '';
     currentState.style.display = deck.style.display = lastCard.style.display = 'flex';
     deck.style.backgroundImage = `url('./assets/mythicCardBackground.png')`;
+    lastCard.style.backgroundImage = ``;
     cardDeck = shuffleCardDeck();
     showStageTracker(cardDeck);
     console.log('cardDeck', cardDeck);
