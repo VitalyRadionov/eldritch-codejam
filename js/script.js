@@ -13,10 +13,12 @@ const shuffleButton = document.querySelector('.shuffle-button');
 const currentState = document.querySelector('.current-state');
 const deck = document.querySelector('.deck');
 const lastCard = document.querySelector('.last-card');
+const stageContainer = currentState.querySelectorAll('.stage-container');
 
 let ancientCard = [];
 let cardDeckOptions = [];
 let cardDeck = [];
+let stageObj = {};
 
 container.addEventListener('click', defineTarget);
 
@@ -26,11 +28,12 @@ function defineTarget(e) {
     e.target.classList.add('active');
     ancientCard = ancientsData.find((element) => { return e.target.classList.contains(element.id) });
     cardDeckOptions = getCards();
-    console.log('cardDeckOptions', cardDeckOptions);
+    // console.log('cardDeckOptions', cardDeckOptions);
 
     toggleClassActive(difficultyContainer) != null ? toggleClassActive(difficultyContainer).classList.remove('active') : [];
     shuffleButton.style = '';
     showDifficulty();
+    currentState.style.display = deck.style.display = lastCard.style.display = 'none';
   }
 
   if (e.target.classList.contains('difficulty')) {
@@ -47,6 +50,7 @@ function defineTarget(e) {
     shuffleButton.style = '';
     currentState.style.display = deck.style.display = lastCard.style.display = 'flex';
     cardDeck = shuffleCardDeck();
+    stageObj = collectStage(cardDeck);
     console.log('cardDeck', cardDeck);
   }
 }
@@ -94,7 +98,7 @@ function filterCards(colorCards) {
   ['easy', 'normal', 'hard']
     .filter(level => cardDeckOptions.difficulty.removeCards != level)
     .forEach(level => difficultiesObj[level] = [...colorCards.filter(element => element.difficulty && level.includes(element.difficulty))]);
-  console.log('difficultiesObj', difficultiesObj);
+  // console.log('difficultiesObj', difficultiesObj);
 
   switch (cardDeckOptions.difficulty.id) {
     case 'veryEasy':
@@ -120,7 +124,7 @@ function shuffle(difficultiesObj, color, level) {
   let cardSet = [];
 
   normalCards = cardDeckOptions[color] - difficultiesObj[level].length;
-  console.log(normalCards);
+  // console.log(normalCards);
   if (normalCards >= 0) {
     for (let index = normalCards; index > 0; index--) {
       cardSet.push(...difficultiesObj.normal.splice(getRandomNum(difficultiesObj.normal.length - 1, 0), 1));
@@ -137,4 +141,23 @@ function shuffle(difficultiesObj, color, level) {
   }
   return difficultiesObj = cardSet;
   // console.log('difficultiesObj', difficultiesObj);
+}
+
+function collectStage() {
+  let stage = [];
+
+  for (const key in ancientCard) {
+    if (key.includes('Stage')) {
+      stage.push(ancientCard[key]);
+
+    }
+  }
+  console.log(stage);
+  console.log(stageContainer);
+  stage.forEach((element, index) => {
+    stageContainer[index].querySelector('.dots-container').innerHTML = `
+    <div class="dot green">${element.greenCards}</div>
+    <div class="dot brown">${element.brownCards}</div>
+    <div class="dot blue">${element.blueCards}</div>`
+  });
 }
