@@ -18,7 +18,9 @@ const stageContainer = currentState.querySelectorAll('.stage-container');
 let ancientCard = [];
 let cardDeckOptions = [];
 let cardDeck = [];
-let stageObj = {};
+let stages = [];
+let currStage = 0;
+let lapCounter = [0, 0, 0];
 
 container.addEventListener('click', defineTarget);
 
@@ -34,6 +36,9 @@ function defineTarget(e) {
     shuffleButton.style = '';
     showDifficulty();
     currentState.style.display = deck.style.display = lastCard.style.display = 'none';
+    stages = [];
+    currStage = 0;
+    lapCounter = [0, 0, 0];
   }
 
   if (e.target.classList.contains('difficulty')) {
@@ -43,15 +48,23 @@ function defineTarget(e) {
     showShuffleButton();
 
     cardDeckOptions.difficulty = getDifficulty(e.target.innerText);
+    stages = [];
+    currStage = 0;
+    lapCounter = [0, 0, 0];
     console.log('cardDeckOptions', cardDeckOptions);
   }
 
   if (e.target.classList.contains('shuffle-button')) {
     shuffleButton.style = '';
     currentState.style.display = deck.style.display = lastCard.style.display = 'flex';
+    deck.style.backgroundImage = `url('./assets/mythicCardBackground.png')`;
     cardDeck = shuffleCardDeck();
-    stageObj = collectStage(cardDeck);
+    showStageTracker(cardDeck);
     console.log('cardDeck', cardDeck);
+  }
+
+  if (e.target.classList.contains('deck')) {
+    changeTracker();
   }
 }
 
@@ -84,9 +97,9 @@ function getDifficulty(level) {
 
 function shuffleCardDeck() {
   return cardDeck = {
-    green: filterCards(greenCards),
-    blue: filterCards(blueCards),
-    brown: filterCards(brownCards),
+    greenCards: filterCards(greenCards),
+    blueCards: filterCards(blueCards),
+    brownCards: filterCards(brownCards),
   };
 }
 
@@ -143,21 +156,68 @@ function shuffle(difficultiesObj, color, level) {
   // console.log('difficultiesObj', difficultiesObj);
 }
 
-function collectStage() {
-  let stage = [];
-
+function showStageTracker() {
+  // let stage = [];
+  let a = 0
   for (const key in ancientCard) {
     if (key.includes('Stage')) {
-      stage.push(ancientCard[key]);
-
+      stages.push(ancientCard[key]);
+      for (const i in ancientCard[key]) {
+        lapCounter[a] = lapCounter[a] + ancientCard[key][i];
+      }
+      a++;
     }
   }
-  console.log(stage);
-  console.log(stageContainer);
-  stage.forEach((element, index) => {
+
+  console.log('lapCounter', lapCounter);
+  console.log(stages);
+
+  currentState.querySelectorAll('.stage-text').forEach(element => {
+    element.classList.remove('done');
+  });
+
+  stages.forEach((element, index) => {
     stageContainer[index].querySelector('.dots-container').innerHTML = `
     <div class="dot green">${element.greenCards}</div>
     <div class="dot brown">${element.brownCards}</div>
     <div class="dot blue">${element.blueCards}</div>`
   });
+
+  cardDeck = getSingleDeck(stages)
+}
+
+function getSingleDeck(stages) {
+  let cardSet = [];
+  let st = [];
+  stages.forEach((element, item) => {
+    for (const key in element) {
+      for (let index = 0; index < element[key]; index++) {
+        st.push(...cardDeck[key].splice(0, 1));
+      }
+    }
+    for (let index = st.length - 1; index >= 0; index--) {
+      cardSet.push(...st.splice(getRandomNum(index, 0), 1));
+    }
+  });
+  return cardSet;
+}
+
+
+function changeTracker() {
+  if (currStage < lapCounter.length) {
+    showLastCard();
+    let remCard = [...cardDeck.splice(0, 1)];
+    let counter = stageContainer[currStage].querySelector('.' + remCard[0].color);
+
+    lapCounter[currStage]--;
+    counter.innerText = `${+counter.innerText - 1}`
+    if (!lapCounter[currStage]) {
+      stageContainer[currStage].querySelector('.stage-text').classList.add('done');
+      currStage++;
+    }
+  }
+}
+
+function showLastCard() {
+  lastCard.style.backgroundImage = `url(${cardDeck[0].cardFace})`;
 }
